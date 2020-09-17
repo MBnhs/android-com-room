@@ -1,6 +1,5 @@
 package br.com.alura.agenda.asynctask;
 
-import android.os.AsyncTask;
 
 import java.util.List;
 
@@ -10,7 +9,7 @@ import br.com.alura.agenda.model.Aluno;
 import br.com.alura.agenda.model.Telefone;
 import br.com.alura.agenda.model.TipoTelefone;
 
-public class EditaAlunoTask extends AsyncTask<Void, Void, Void> {
+public class EditaAlunoTask extends BaseAlunoComTelefoneTask {
 
     private final AlunoDAO alunoDAO;
     private final Aluno aluno;
@@ -18,7 +17,6 @@ public class EditaAlunoTask extends AsyncTask<Void, Void, Void> {
     private final Telefone telefoneCelular;
     private final TelefoneDAO telefoneDAO;
     private final List<Telefone> telefonesDoAluno;
-    private final AlunoEditadoListener listener;
 
     public EditaAlunoTask(AlunoDAO alunoDAO,
                           Aluno aluno,
@@ -26,14 +24,14 @@ public class EditaAlunoTask extends AsyncTask<Void, Void, Void> {
                           Telefone telefoneCelular,
                           TelefoneDAO telefoneDAO,
                           List<Telefone> telefonesDoAluno,
-                          AlunoEditadoListener listener) {
+                          FinalizadaListener listener) {
+        super(listener);
         this.alunoDAO = alunoDAO;
         this.aluno = aluno;
         this.telefoneFixo = telefoneFixo;
         this.telefoneCelular = telefoneCelular;
         this.telefoneDAO = telefoneDAO;
         this.telefonesDoAluno = telefonesDoAluno;
-        this.listener = listener;
     }
 
     @Override
@@ -55,23 +53,4 @@ public class EditaAlunoTask extends AsyncTask<Void, Void, Void> {
             }
         }
     }
-
-    private void vinculaAlunoComTelefone(int alunoId, Telefone... telefones) {
-        for (Telefone telefone:
-                telefones) {
-            telefone.setAlunoId(alunoId);
-        }
-
-    }
-
-    @Override
-    protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
-        listener.quandoEditado();
-    }
-
-    public interface AlunoEditadoListener {
-        void quandoEditado();
-    }
-
 }
